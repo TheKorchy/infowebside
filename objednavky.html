@@ -1,0 +1,1609 @@
+<!doctype html>
+<html lang="sk">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Správa objednávok – Pixel & Prompt</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap"
+    />
+    <style>
+      :root {
+        --bg: #f1f5fb;
+        --sf: #fff;
+        --ink: #0f1a30;
+        --mu: #5b6a85;
+        --bl: #3b82f6;
+        --ln: #dfe6f2;
+        --sh: 0 8px 24px rgba(15, 26, 48, 0.08);
+        --f: "Plus Jakarta Sans", "Segoe UI", Arial, sans-serif;
+        box-sizing: border-box;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #0b1226;
+          --sf: #16203d;
+          --ink: #eaf0fb;
+          --mu: #9fb0cc;
+          --ln: #25335a;
+          --sh: 0 8px 24px rgba(0, 0, 0, 0.35);
+          color-scheme: dark;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #0b1226;
+        --sf: #16203d;
+        --ink: #eaf0fb;
+        --mu: #9fb0cc;
+        --ln: #25335a;
+        --sh: 0 8px 24px rgba(0, 0, 0, 0.35);
+        color-scheme: dark;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font: 400 0.98rem/1.5 var(--f);
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
+      }
+      h2,
+      h3 {
+        margin: 0;
+      }
+      button {
+        font-family: inherit;
+      }
+      :focus-visible {
+        outline: 3px solid var(--bl);
+        outline-offset: 2px;
+      }
+      .w {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .top {
+        background: linear-gradient(120deg, #050b1f, #0f1f4d);
+        color: #fff;
+        padding-top: env(safe-area-inset-top, 0px);
+      }
+      .top .w {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+        min-height: 64px;
+        flex-wrap: wrap;
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+      .top b {
+        font-weight: 800;
+      }
+      .top em {
+        font-style: normal;
+        color: #60a5fa;
+      }
+      .seg {
+        display: flex;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 3px;
+      }
+      .seg button {
+        border: 0;
+        background: transparent;
+        color: #c9d6f2;
+        font-weight: 600;
+        font-size: 0.85rem;
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      .seg button[aria-pressed="true"] {
+        background: #fff;
+        color: #0f1a30;
+      }
+      .tr {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .tr a {
+        color: #9ec1ff;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .btn {
+        background: var(--bl);
+        color: #fff;
+        border: 0;
+        border-radius: 9px;
+        padding: 10px 18px;
+        font-weight: 700;
+        font-size: 0.88rem;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
+      }
+      .btn.o {
+        background: transparent;
+        color: var(--ink);
+        border: 1.5px solid var(--ln);
+        box-shadow: none;
+      }
+      .btn.g {
+        background: #16a34a;
+        box-shadow: 0 6px 16px rgba(22, 163, 74, 0.3);
+      }
+      .btn.r {
+        background: transparent;
+        color: #e5484d;
+        border: 1.5px solid #e5484d55;
+        box-shadow: none;
+      }
+      .kpi {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin: 22px 0;
+      }
+      .k {
+        background: var(--sf);
+        border: 1px solid var(--ln);
+        border-top: 4px solid var(--c);
+        border-radius: 14px;
+        padding: 14px 18px;
+      }
+      .k b {
+        display: block;
+        font-size: 1.9rem;
+        font-weight: 800;
+        line-height: 1.1;
+      }
+      .k span {
+        font-size: 0.78rem;
+        color: var(--mu);
+        font-weight: 600;
+      }
+      .s0,
+      .k0 {
+        --c: #3b82f6;
+      }
+      .s1,
+      .k1 {
+        --c: #f59e0b;
+      }
+      .s2,
+      .k2 {
+        --c: #8b5cf6;
+      }
+      .s3,
+      .k3 {
+        --c: #16a34a;
+      }
+      .board {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(260px, 1fr));
+        gap: 14px;
+        overflow-x: auto;
+        padding-bottom: 12px;
+        align-items: start;
+      }
+      .col {
+        background: color-mix(in srgb, var(--sf) 55%, var(--bg));
+        border: 1.5px solid var(--ln);
+        border-radius: 16px;
+        padding: 12px;
+        min-height: 240px;
+      }
+      .col.over {
+        border-color: var(--c);
+        background: color-mix(in srgb, var(--c) 10%, var(--bg));
+      }
+      .ch {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 800;
+        margin: 2px 4px 12px;
+      }
+      .ch::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--c);
+        margin-right: 8px;
+      }
+      .ch span:first-child {
+        flex: 1;
+      }
+      .ch i {
+        font-style: normal;
+        background: var(--sf);
+        border: 1px solid var(--ln);
+        border-radius: 99px;
+        padding: 0 10px;
+        font-size: 0.8rem;
+      }
+      .kc {
+        background: var(--sf);
+        border: 1px solid var(--ln);
+        border-left: 5px solid var(--c);
+        border-radius: 12px;
+        padding: 12px 14px;
+        margin-bottom: 10px;
+        box-shadow: var(--sh);
+        cursor: grab;
+      }
+      .kc.drag {
+        opacity: 0.4;
+      }
+      .kt {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        align-items: flex-start;
+      }
+      .kt b {
+        font-size: 0.95rem;
+      }
+      .pkg {
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+        color: #fff;
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 2px 10px;
+        border-radius: 99px;
+        white-space: nowrap;
+      }
+      .km {
+        font-size: 0.78rem;
+        color: var(--mu);
+        margin: 6px 0;
+      }
+      .bar {
+        height: 8px;
+        background: var(--ln);
+        border-radius: 9px;
+        overflow: hidden;
+      }
+      .bar i {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, #3b82f6, #16a34a);
+      }
+      .kb {
+        display: flex;
+        gap: 6px;
+        margin-top: 10px;
+      }
+      .kb button {
+        flex: 1;
+        border: 1.5px solid var(--ln);
+        background: var(--bg);
+        color: var(--ink);
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.78rem;
+        padding: 6px 4px;
+        cursor: pointer;
+      }
+      .kb button.ok {
+        background: #16a34a;
+        border-color: #16a34a;
+        color: #fff;
+      }
+      .kb button:disabled {
+        opacity: 0.35;
+        cursor: default;
+      }
+      .kb button.sm {
+        flex: 0 0 34px;
+      }
+      .emp {
+        text-align: center;
+        color: var(--mu);
+        font-size: 0.82rem;
+        padding: 24px 6px;
+      }
+      .panel {
+        background: var(--sf);
+        border: 1px solid var(--ln);
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: var(--sh);
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+      th {
+        text-align: left;
+        font-size: 0.75rem;
+        color: var(--mu);
+        padding: 8px 10px;
+        border-bottom: 2px solid var(--ln);
+      }
+      td {
+        padding: 11px 10px;
+        border-bottom: 1px solid var(--ln);
+        vertical-align: middle;
+      }
+      td small {
+        display: block;
+        color: var(--mu);
+      }
+      select,
+      textarea,
+      input[type="text"] {
+        padding: 9px;
+        border: 1.5px solid var(--ln);
+        border-radius: 9px;
+        background: var(--bg);
+        color: var(--ink);
+        font: inherit;
+      }
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border-color: var(--bl);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+      }
+      .cg {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .cg .panel h3 {
+        margin-bottom: 16px;
+        font-size: 1rem;
+      }
+      .donut {
+        width: 170px;
+        height: 170px;
+        border-radius: 50%;
+        margin: 0 auto 16px;
+        display: grid;
+        place-items: center;
+      }
+      .donut div {
+        width: 104px;
+        height: 104px;
+        border-radius: 50%;
+        background: var(--sf);
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        font-size: 1.6rem;
+      }
+      .lg {
+        display: grid;
+        gap: 6px;
+        font-size: 0.88rem;
+      }
+      .lg span::before {
+        content: "";
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--c);
+        margin-right: 8px;
+      }
+      .hb {
+        display: grid;
+        grid-template-columns: 130px 1fr 28px;
+        gap: 10px;
+        align-items: center;
+        margin: 9px 0;
+        font-size: 0.85rem;
+      }
+      .hb div {
+        height: 14px;
+        background: var(--ln);
+        border-radius: 9px;
+        overflow: hidden;
+      }
+      .hb i {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, #3b82f6, #6366f1);
+        border-radius: 9px;
+      }
+      dialog {
+        border: 0;
+        border-radius: 18px;
+        padding: 0;
+        background: var(--sf);
+        color: var(--ink);
+        width: min(680px, 94vw);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+      }
+      dialog::backdrop {
+        background: rgba(5, 11, 31, 0.6);
+      }
+      .dp {
+        padding: 24px;
+        max-height: 88vh;
+        overflow: auto;
+      }
+      .dp small {
+        color: var(--mu);
+      }
+      .dd {
+        background: var(--bg);
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin: 12px 0;
+        white-space: pre-wrap;
+        font-size: 0.9rem;
+      }
+      .tk {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        margin: 12px 0;
+      }
+      .tk label {
+        display: flex;
+        gap: 9px;
+        background: var(--bg);
+        border-radius: 9px;
+        padding: 8px 10px;
+        font-size: 0.88rem;
+        cursor: pointer;
+      }
+      .tk input {
+        accent-color: #16a34a;
+      }
+      .tk .d {
+        text-decoration: line-through;
+        color: var(--mu);
+      }
+      .row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+        align-items: center;
+      }
+      #raw {
+        width: 100%;
+        min-height: 170px;
+        font:
+          500 0.85rem/1.6 ui-monospace,
+          Menlo,
+          Consolas,
+          monospace;
+      }
+      .err {
+        color: #e5484d;
+        font-weight: 600;
+        font-size: 0.85rem;
+      }
+      @media (max-width: 800px) {
+        .kpi {
+          grid-template-columns: 1fr 1fr;
+        }
+        .cg,
+        .tk {
+          grid-template-columns: 1fr;
+        }
+      }
+      #gate {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: grid;
+        place-items: center;
+        padding: 20px;
+        background:
+          radial-gradient(
+            70% 90% at 70% 10%,
+            rgba(59, 130, 246, 0.35),
+            transparent 70%
+          ),
+          #050b1f;
+      }
+      #gate[hidden] {
+        display: none;
+      }
+      .gb {
+        width: min(380px, 100%);
+        background: var(--sf);
+        border: 1px solid var(--ln);
+        border-radius: 20px;
+        padding: 32px 28px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+        text-align: center;
+        display: grid;
+        gap: 12px;
+      }
+      .gb h1 {
+        margin: 0;
+        font-size: 1.4rem;
+      }
+      .gb p {
+        margin: 0;
+        color: var(--mu);
+        font-size: 0.88rem;
+      }
+      .gb .err {
+        min-height: 1.2em;
+      }
+      .gl {
+        font-size: 2rem;
+      }
+      .gb input {
+        padding: 13px;
+        border: 1.5px solid var(--ln);
+        border-radius: 10px;
+        background: var(--bg);
+        color: var(--ink);
+        font: inherit;
+      }
+      .gb input:focus {
+        outline: none;
+        border-color: var(--bl);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+      }
+      .gb .btn {
+        width: 100%;
+      }
+      .gb .btn:disabled {
+        opacity: 0.6;
+      }
+      .lk {
+        background: none;
+        border: 0;
+        color: var(--mu);
+        font-size: 0.8rem;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+
+      /* --- Pridané štýly pre dynamický Dark/Light Mode prepínač s animáciami --- */
+      .theme-switch-container {
+        display: flex;
+        align-items: center;
+      }
+
+      .theme-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1.5px solid rgba(255, 255, 255, 0.35);
+        color: #fff;
+        width: 40px;
+        height: 40px;
+        border-radius: 9px;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        font-size: 1.1rem;
+        transition:
+          transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+          background 0.2s,
+          border-color 0.2s;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .theme-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.08) rotate(12deg);
+      }
+
+      .theme-btn:active {
+        transform: scale(0.92);
+      }
+
+      @keyframes rotateIn {
+        0% {
+          transform: scale(0.5) rotate(-90deg);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1) rotate(0deg);
+          opacity: 1;
+        }
+      }
+
+      .theme-btn span {
+        display: inline-block;
+        animation: rotateIn 0.3s ease forwards;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="gate">
+      <form id="gf" class="gb">
+        <div class="gl">🔒</div>
+        <h1 id="gt">Prihlásenie</h1>
+        <p id="gp">Zadajte heslo administrátora.</p>
+        <input
+          type="text"
+          id="u1"
+          autocomplete="username"
+          placeholder="Meno"
+          aria-label="Meno"
+          required
+        />
+        <input
+          type="password"
+          id="p1"
+          autocomplete="current-password"
+          placeholder="Heslo"
+          aria-label="Heslo"
+          required
+        />
+        <input
+          type="password"
+          id="p2"
+          autocomplete="new-password"
+          placeholder="Zopakujte heslo"
+          aria-label="Zopakujte heslo"
+          hidden
+        />
+        <button class="btn" id="gs">Odomknúť</button>
+        <p class="err" id="ge" role="alert"></p>
+        <button type="button" class="lk" id="gr">Zabudnuté heslo?</button>
+      </form>
+    </div>
+    <header class="top" id="hdr" hidden>
+      <div class="w">
+        <b>Pixel <em>&amp; Prompt</em> · objednávky</b>
+        <div class="seg" id="seg">
+          <button data-v="board" aria-pressed="true">Tabuľa</button
+          ><button data-v="table" aria-pressed="false">Tabuľka</button
+          ><button data-v="charts" aria-pressed="false">Grafy</button>
+        </div>
+        <div class="theme-switch-container">
+          <button
+            type="button"
+            class="theme-btn"
+            id="themeToggle"
+            aria-label="Prepnúť režim zobrazenia"
+          >
+            <span id="themeIcon">🌙</span>
+          </button>
+        </div>
+        <div class="tr">
+          <a
+            href="index.html"
+            target="_blank"
+            rel="noopener"
+            >Verejný web ↗</a
+          ><button class="btn" id="new">+ Nová objednávka</button
+          ><button
+            class="btn o"
+            id="clr"
+            style="color: #fff; border-color: rgba(255, 255, 255, 0.35)"
+          >
+            Vymazať ukážky</button
+          ><button
+            class="btn o"
+            id="lock"
+            style="color: #fff; border-color: rgba(255, 255, 255, 0.35)"
+          >
+            🔒 Zamknúť
+          </button>
+        </div>
+      </div>
+    </header>
+    <main class="w" id="app" hidden>
+      <div class="kpi" id="kpi"></div>
+      <div id="v-board" class="board"></div>
+      <div id="v-table" class="panel" hidden></div>
+      <div id="v-charts" hidden></div>
+    </main>
+    <dialog id="dAdd">
+      <div class="dp">
+        <h2>Nová objednávka</h2>
+        <p>
+          <small
+            >Vložte text e-mailu od klienta (z tlačidla „Odoslať e-mailom“ na
+            verejnom webe).</small
+          >
+        </p>
+        <textarea
+          id="raw"
+          placeholder="OBJEDNÁVKA WEBU&#10;Balíček: Firemný web&#10;Doplnky: E-shop&#10;Termín: Do mesiaca&#10;Meno: ...&#10;E-mail: ..."
+        ></textarea>
+        <div class="row">
+          <button class="btn" id="add">Pridať na tabuľu</button
+          ><button class="btn o" id="demo">Ukážka</button
+          ><button class="btn o" data-a="close">Zrušiť</button
+          ><span class="err" id="err"></span>
+        </div>
+      </div>
+    </dialog>
+    <dialog id="dDet"><div class="dp" id="dBody"></div></dialog>
+    <script>
+      (function () {
+        var KEY = "pp_orders_v1",
+          orders = [],
+          view = "board",
+          openId = null;
+        try {
+          orders = JSON.parse(localStorage.getItem(KEY) || "[]");
+        } catch (e) {}
+        function save() {
+          try {
+            localStorage.setItem(KEY, JSON.stringify(orders));
+          } catch (e) {}
+        }
+        var ST = ["Nová", "Ponuka odoslaná", "Vo vývoji", "Hotová"],
+          C = ["#3b82f6", "#f59e0b", "#8b5cf6", "#16a34a"];
+        var BASE = {
+          Vizitka: [
+            "Získať obsah, logo a farby",
+            "Navrhnúť jednostránkový dizajn",
+            "Zostaviť stránku",
+            "Pripojiť kontaktný formulár",
+            "Mobilná verzia a testovanie",
+            "Spustiť na doméne",
+          ],
+          "Firemný web": [
+            "Zmapovať podstránky (až 8)",
+            "Dizajn podľa značky",
+            "Vývoj podstránok",
+            "Nastaviť úpravu obsahu",
+            "SEO a analytika",
+            "Testovanie a spustenie",
+          ],
+          "Web na mieru": [
+            "Analýza požiadaviek",
+            "Návrh architektúry a funkcií",
+            "Vývoj vlastných funkcií",
+            "Integrácie",
+            "Testovanie a bezpečnosť",
+            "Spustenie a podpora",
+          ],
+          x: [
+            "Dohodnúť konzultačný hovor",
+            "Odporučiť vhodný balíček",
+            "Poslať ponuku s pevnou cenou",
+          ],
+        };
+        var EX = [
+            "Rezervačný systém",
+            "E-shop",
+            "AI funkcie",
+            "Viac jazykov",
+            "Pomoc s textami a fotkami",
+            "Správa po spustení",
+            "Databáza a administrácia",
+          ],
+          PK = ["Vizitka", "Firemný web", "Web na mieru", "Neviem, poraďte mi"];
+        function $(i) {
+          return document.getElementById(i);
+        }
+        function esc(s) {
+          return String(s).replace(/[&<>"']/g, function (c) {
+            return {
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            }[c];
+          });
+        }
+        function fld(t, k) {
+          var m = t.match(new RegExp("^\\s*" + k + ":[ \\t]*(.*)$", "mi"));
+          return m ? m[1].trim() : "";
+        }
+        function parse(t) {
+          var pkg = fld(t, "Balíček"),
+            ex = fld(t, "Doplnky"),
+            i = t.search(/Popis projektu:/i),
+            d =
+              i >= 0
+                ? t
+                    .slice(i)
+                    .replace(/^Popis projektu:\s*/i, "")
+                    .trim()
+                : "";
+          var o = {
+            id: Date.now() + "" + Math.floor(Math.random() * 999),
+            date: new Date().toLocaleDateString("sk-SK"),
+            pkg: pkg.replace(/\(nevybraný\)/, "").trim(),
+            ex:
+              !ex || /žiadne/i.test(ex)
+                ? []
+                : ex
+                    .split(",")
+                    .map(function (x) {
+                      return x.trim();
+                    })
+                    .filter(Boolean),
+            dl: fld(t, "Termín"),
+            name: fld(t, "Meno").replace(/^-$/, ""),
+            email: fld(t, "E-mail").replace(/^-$/, ""),
+            desc: d === "-" ? "" : d,
+            st: "Nová",
+            note: "",
+          };
+          o.tasks = (BASE[o.pkg] || BASE.x)
+            .concat(
+              o.ex.map(function (e) {
+                return "Doplnok: " + e;
+              }),
+            )
+            .map(function (x) {
+              return { t: x, d: false };
+            });
+          return o;
+        }
+        function prog(o) {
+          return o.tasks.length
+            ? Math.round(
+                (100 *
+                  o.tasks.filter(function (t) {
+                    return t.d;
+                  }).length) /
+                  o.tasks.length,
+              )
+            : 0;
+        }
+        function get(id) {
+          return orders.filter(function (o) {
+            return o.id === id;
+          })[0];
+        }
+        function mv(o, st) {
+          o.st = st;
+          if (st === "Hotová") o.fin = new Date().toLocaleDateString("sk-SK");
+          else delete o.fin;
+          save();
+          render();
+          if (openId === o.id) detail(o.id);
+        }
+        function reply(o) {
+          return (
+            "mailto:" +
+            encodeURIComponent(o.email) +
+            "?subject=" +
+            encodeURIComponent("Váš web – " + (o.pkg || "ponuka")) +
+            "&body=" +
+            encodeURIComponent(
+              "Dobrý deň" +
+                (o.name ? " " + o.name : "") +
+                ",\n\nďakujem za vašu správu. Prečítal som si zadanie a ozvem sa s ďalším postupom a pevnou cenou.\n\nS pozdravom",
+            )
+          );
+        }
+        function card(o) {
+          var i = ST.indexOf(o.st);
+          return (
+            '<div class="kc s' +
+            i +
+            '" draggable="true" data-id="' +
+            o.id +
+            '"><div class="kt"><b>' +
+            esc(o.name || "Bez mena") +
+            '</b><span class="pkg">' +
+            esc(o.pkg || "—") +
+            '</span></div><div class="km">' +
+            (o.ex.length ? "+" + o.ex.length + " doplnky · " : "") +
+            esc(o.dl || "bez termínu") +
+            '</div><div class="bar"><i style="width:' +
+            prog(o) +
+            '%"></i></div>' +
+            '<div class="kb"><button class="sm" data-a="prev" ' +
+            (i === 0 ? "disabled" : "") +
+            ' aria-label="Späť">◀</button><button data-a="open">Detail</button>' +
+            (i < 3
+              ? '<button class="ok" data-a="done">✓ Hotovo</button>'
+              : "") +
+            '<button class="sm" data-a="next" ' +
+            (i === 3 ? "disabled" : "") +
+            ' aria-label="Ďalej">▶</button></div></div>'
+          );
+        }
+        function bars(names, vals) {
+          var m = Math.max.apply(null, vals.concat([1]));
+          return names
+            .map(function (n, i) {
+              return (
+                '<div class="hb"><span>' +
+                esc(n) +
+                '</span><div><i style="width:' +
+                (100 * vals[i]) / m +
+                '%"></i></div><b>' +
+                vals[i] +
+                "</b></div>"
+              );
+            })
+            .join("");
+        }
+        function render() {
+          var cnt = ST.map(function (s) {
+            return orders.filter(function (o) {
+              return o.st === s;
+            }).length;
+          });
+          $("kpi").innerHTML = ST.map(function (s, i) {
+            return (
+              '<div class="k k' +
+              i +
+              '"><b>' +
+              cnt[i] +
+              "</b><span>" +
+              s +
+              "</span></div>"
+            );
+          }).join("");
+          document.querySelectorAll("#seg button").forEach(function (b) {
+            b.setAttribute("aria-pressed", b.dataset.v === view);
+          });
+          ["board", "table", "charts"].forEach(function (v) {
+            $("v-" + v).hidden = v !== view;
+          });
+          $("v-board").innerHTML = ST.map(function (s, i) {
+            var l = orders.filter(function (o) {
+              return o.st === s;
+            });
+            return (
+              '<div class="col s' +
+              i +
+              '" data-st="' +
+              s +
+              '"><div class="ch"><span>' +
+              s +
+              "</span><i>" +
+              l.length +
+              "</i></div>" +
+              (l.map(card).join("") ||
+                '<div class="emp">' +
+                  (i === 0
+                    ? "Pridajte prvú objednávku"
+                    : "Presuňte sem kartu") +
+                  "</div>") +
+              "</div>"
+            );
+          }).join("");
+          $("v-table").innerHTML = orders.length
+            ? "<table><thead><tr><th>Klient</th><th>Balíček</th><th>Termín</th><th>Stav</th><th>Postup</th><th></th></tr></thead><tbody>" +
+              orders
+                .map(function (o) {
+                  return (
+                    '<tr data-id="' +
+                    o.id +
+                    '"><td><b>' +
+                    esc(o.name || "Bez mena") +
+                    "</b><small>" +
+                    esc(o.email) +
+                    "</small></td><td>" +
+                    esc(o.pkg || "—") +
+                    "</td><td>" +
+                    esc(o.dl || "—") +
+                    '</td><td><select data-a="st">' +
+                    ST.map(function (s) {
+                      return (
+                        "<option" +
+                        (s === o.st ? " selected" : "") +
+                        ">" +
+                        s +
+                        "</option>"
+                      );
+                    }).join("") +
+                    '</select></td><td style="min-width:110px"><div class="bar"><i style="width:' +
+                    prog(o) +
+                    '%"></i></div></td><td><button class="btn o" data-a="open">Detail</button> ' +
+                    (o.st === "Hotová"
+                      ? ""
+                      : '<button class="btn g" data-a="done">✓ Hotovo</button>') +
+                    "</td></tr>"
+                  );
+                })
+                .join("") +
+              "</tbody></table>"
+            : '<div class="emp">Zatiaľ žiadne objednávky.</div>';
+          var tot = orders.length,
+            g = 0,
+            seg = ST.map(function (s, i) {
+              var a = g,
+                b = g + (tot ? (100 * cnt[i]) / tot : 0);
+              g = b;
+              return C[i] + " " + a + "% " + b + "%";
+            }).join(",");
+          var avg = tot
+            ? Math.round(
+                orders.reduce(function (a, o) {
+                  return a + prog(o);
+                }, 0) / tot,
+              )
+            : 0;
+          $("v-charts").innerHTML =
+            '<div class="cg"><div class="panel"><h3>Stavy objednávok</h3><div class="donut" style="background:' +
+            (tot ? "conic-gradient(" + seg + ")" : "var(--ln)") +
+            '"><div>' +
+            tot +
+            '</div></div><div class="lg">' +
+            ST.map(function (s, i) {
+              return (
+                '<span style="--c:' +
+                C[i] +
+                '">' +
+                s +
+                ": <b>" +
+                cnt[i] +
+                "</b></span>"
+              );
+            }).join("") +
+            "</div></div>" +
+            '<div class="panel"><h3>Priemerný postup úloh</h3><div class="donut" style="background:conic-gradient(#16a34a ' +
+            avg +
+            '%,var(--ln) 0)"><div>' +
+            avg +
+            '%</div></div><p style="text-align:center;color:var(--mu);margin:0">Hotové: ' +
+            cnt[3] +
+            " z " +
+            tot +
+            " objednávok</p></div>" +
+            '<div class="panel"><h3>Najžiadanejšie balíčky</h3>' +
+            bars(
+              PK,
+              PK.map(function (p) {
+                return orders.filter(function (o) {
+                  return o.pkg === p;
+                }).length;
+              }),
+            ) +
+            "</div>" +
+            '<div class="panel"><h3>Najžiadanejšie doplnky</h3>' +
+            bars(
+              EX,
+              EX.map(function (e) {
+                return orders.filter(function (o) {
+                  return o.ex.indexOf(e) > -1;
+                }).length;
+              }),
+            ) +
+            "</div></div>";
+        }
+        function detail(id) {
+          var o = get(id);
+          if (!o) return;
+          openId = id;
+          var i = ST.indexOf(o.st),
+            all = prog(o) === 100 && o.st !== "Hotová";
+          $("dBody").innerHTML =
+            '<div class="kt"><div><h2>' +
+            esc(o.name || "Bez mena") +
+            "</h2><small>" +
+            esc(o.email || "bez e-mailu") +
+            " · prijaté " +
+            esc(o.date) +
+            (o.fin ? " · hotové " + esc(o.fin) : "") +
+            '</small></div><select data-a="st">' +
+            ST.map(function (s) {
+              return (
+                "<option" +
+                (s === o.st ? " selected" : "") +
+                ">" +
+                s +
+                "</option>"
+              );
+            }).join("") +
+            "</select></div>" +
+            '<p><span class="pkg">' +
+            esc(o.pkg || "Bez balíčka") +
+            "</span> " +
+            o.ex
+              .map(function (e) {
+                return "<small>+ " + esc(e) + "</small>";
+              })
+              .join(" ") +
+            "</p><p><small>Termín: <b>" +
+            esc(o.dl || "neuvedený") +
+            "</b></small></p>" +
+            (o.desc ? '<div class="dd">' + esc(o.desc) + "</div>" : "") +
+            '<div class="bar"><i style="width:' +
+            prog(o) +
+            '%"></i></div><div class="tk">' +
+            o.tasks
+              .map(function (t, n) {
+                return (
+                  '<label><input type="checkbox" data-a="tk" data-i="' +
+                  n +
+                  '"' +
+                  (t.d ? " checked" : "") +
+                  '><span class="' +
+                  (t.d ? "d" : "") +
+                  '">' +
+                  esc(t.t) +
+                  "</span></label>"
+                );
+              })
+              .join("") +
+            "</div>" +
+            '<textarea data-a="note" style="width:100%;min-height:80px" placeholder="Poznámky (cena, dohody...)">' +
+            esc(o.note) +
+            "</textarea>" +
+            '<div class="row">' +
+            (all
+              ? '<button class="btn g" data-a="done">✓ Všetko hotové – presunúť do Hotové</button>'
+              : o.st !== "Hotová"
+                ? '<button class="btn g" data-a="done">✓ Označiť ako hotové</button>'
+                : '<button class="btn o" data-a="reopen">↩ Vrátiť do vývoja</button>') +
+            (o.email
+              ? '<a class="btn" href="' + reply(o) + '">Odpovedať klientovi</a>'
+              : "") +
+            '<button class="btn r" data-a="del">Zmazať</button><button class="btn o" data-a="close">Zavrieť</button></div>';
+          if (!$("dDet").open) $("dDet").showModal();
+        }
+        function rowId(el) {
+          var n = el.closest("[data-id]");
+          return n ? n.dataset.id : openId;
+        }
+        document.addEventListener("click", function (e) {
+          var b = e.target.closest("[data-a]");
+          if (
+            !b ||
+            b.tagName === "SELECT" ||
+            b.tagName === "TEXTAREA" ||
+            b.type === "checkbox"
+          )
+            return;
+          var a = b.dataset.a,
+            o = get(rowId(b));
+          if (a === "close") {
+            $("dDet").close();
+            $("dAdd").close();
+            return;
+          }
+          if (!o) return;
+          if (a === "open") detail(o.id);
+          else if (a === "done") mv(o, "Hotová");
+          else if (a === "reopen") mv(o, "Vo vývoji");
+          else if (a === "prev") mv(o, ST[Math.max(0, ST.indexOf(o.st) - 1)]);
+          else if (a === "next") mv(o, ST[Math.min(3, ST.indexOf(o.st) + 1)]);
+          else if (
+            a === "del" &&
+            twice(b) &&
+            (function () {
+              return true;
+            })("Naozaj zmazať túto objednávku?")
+          ) {
+            orders = orders.filter(function (x) {
+              return x !== o;
+            });
+            save();
+            $("dDet").close();
+            render();
+          }
+        });
+        document.addEventListener("change", function (e) {
+          var t = e.target,
+            a = t.dataset.a,
+            o = get(rowId(t));
+          if (!o) return;
+          if (a === "st") mv(o, t.value);
+          else if (a === "tk") {
+            o.tasks[+t.dataset.i].d = t.checked;
+            save();
+            render();
+            detail(o.id);
+          }
+        });
+        document.addEventListener("input", function (e) {
+          if (e.target.dataset.a === "note") {
+            var o = get(openId);
+            if (o) {
+              o.note = e.target.value;
+              save();
+            }
+          }
+        });
+        $("dDet").addEventListener("close", function () {
+          openId = null;
+        });
+        $("seg").onclick = function (e) {
+          var b = e.target.closest("[data-v]");
+          if (b) {
+            view = b.dataset.v;
+            render();
+          }
+        };
+        $("new").onclick = function () {
+          $("err").textContent = "";
+          $("dAdd").showModal();
+        };
+        $("demo").onclick = function () {
+          $("raw").value =
+            "OBJEDNÁVKA WEBU\nBalíček: Firemný web\nDoplnky: E-shop, AI funkcie\nTermín: Do mesiaca\nMeno: Ján Novák\nE-mail: jan@example.com\n\nPopis projektu:\nMalá pekáreň, chceme predávať online a chatbota.";
+        };
+        $("add").onclick = function () {
+          var o = parse($("raw").value);
+          if (!o.pkg && !o.name && !o.email) {
+            $("err").textContent = "Text som nerozpoznal. Vložte celý e-mail.";
+            return;
+          }
+          orders.unshift(o);
+          save();
+          $("raw").value = "";
+          $("dAdd").close();
+          view = "board";
+          render();
+        };
+        function seed() {
+          var D = [
+            [
+              "Firemný web",
+              "E-shop, AI funkcie",
+              "Do mesiaca",
+              "Ján Novák",
+              "jan@example.com",
+              "Malá pekáreň, chceme predať online a mať chatbota na otázky.",
+              2,
+              4,
+            ],
+            [
+              "Vizitka",
+              "",
+              "Čo najskôr",
+              "Eva Kováčová",
+              "eva@example.com",
+              "Fotografka, potrebuje jednostránkové portfólio.",
+              0,
+              0,
+            ],
+            [
+              "Web na mieru",
+              "Rezervačný systém, Databáza a administrácia",
+              "Do troch mesiacov",
+              "Peter Horváth",
+              "peter@example.com",
+              "Autoservis: rezervácie termínov a administrácia pre zamestnancov.",
+              1,
+              1,
+            ],
+            [
+              "Firemný web",
+              "Viac jazykov",
+              "Do mesiaca",
+              "Mária Szabóová",
+              "maria@example.com",
+              "Penzión, web v slovenčine, angličtine a nemčine.",
+              3,
+              99,
+            ],
+            [
+              "Vizitka",
+              "Pomoc s textami a fotkami",
+              "Nie je naponáhlo",
+              "Tomáš Blaho",
+              "tomas@example.com",
+              "Kaderníctvo, jednoduchý web s cenníkom.",
+              2,
+              2,
+            ],
+            [
+              "Neviem, poraďte mi",
+              "",
+              "Čo najskôr",
+              "Lucia Mináčová",
+              "lucia@example.com",
+              "Chcem web pre online kurzy, neviem čo je vhodné.",
+              0,
+              0,
+            ],
+          ];
+          return D.map(function (d) {
+            var o = parse(
+              "Balíček: " +
+                d[0] +
+                "\nDoplnky: " +
+                (d[1] || "žiadne") +
+                "\nTermín: " +
+                d[2] +
+                "\nMeno: " +
+                d[3] +
+                "\nE-mail: " +
+                d[4] +
+                "\n\nPopis projektu:\n" +
+                d[5],
+            );
+            o.st = ST[d[6]];
+            o.demo = true;
+            o.tasks.forEach(function (t, i) {
+              t.d = i < d[7];
+            });
+            if (d[6] === 3) o.fin = o.date;
+            return o;
+          });
+        }
+        try {
+          if (!orders.length && !localStorage.getItem("pp_seeded")) {
+            orders = seed();
+            save();
+            localStorage.setItem("pp_seeded", "1");
+          }
+        } catch (e) {}
+        $("clr").onclick = function () {
+          if (
+            twice(this) &&
+            (function () {
+              return true;
+            })("Vymazať všetky ukážkové záznamy?")
+          ) {
+            orders = orders.filter(function (o) {
+              return !o.demo;
+            });
+            save();
+            render();
+          }
+        };
+        function twice(b) {
+          if (b.dataset.arm) {
+            b.dataset.arm = "";
+            clearTimeout(b._t);
+            b.textContent = b.dataset.lbl;
+            return true;
+          }
+          b.dataset.arm = "1";
+          b.dataset.lbl = b.textContent;
+          b.textContent = "Naozaj? Kliknite znova";
+          b._t = setTimeout(function () {
+            b.dataset.arm = "";
+            b.textContent = b.dataset.lbl;
+          }, 4000);
+          return false;
+        }
+        var drag = null;
+        document.addEventListener("dragstart", function (e) {
+          var c = e.target.closest && e.target.closest(".kc");
+          if (c) {
+            drag = c.dataset.id;
+            c.classList.add("drag");
+            e.dataTransfer.setData("text/plain", drag);
+            e.dataTransfer.effectAllowed = "move";
+          }
+        });
+        document.addEventListener("dragend", function () {
+          drag = null;
+          render();
+        });
+        document.addEventListener("dragover", function (e) {
+          var c = e.target.closest && e.target.closest(".col");
+          if (c && drag) {
+            e.preventDefault();
+            document.querySelectorAll(".col.over").forEach(function (x) {
+              x.classList.remove("over");
+            });
+            c.classList.add("over");
+          }
+        });
+        document.addEventListener("drop", function (e) {
+          var c = e.target.closest && e.target.closest(".col"),
+            o = drag && get(drag);
+          if (c && o) {
+            e.preventDefault();
+            drag = null;
+            if (o.st !== c.dataset.st) mv(o, c.dataset.st);
+            else render();
+          }
+        });
+        render();
+      })();
+    </script>
+    <script>
+      (function () {
+        var $ = function (i) {
+            return document.getElementById(i);
+          },
+          SK = "pp_admin_pw",
+          tries = 0,
+          timer = null,
+          rec = null;
+        function ls(k, v) {
+          try {
+            if (v === undefined) return localStorage.getItem(k);
+            if (v === null) localStorage.removeItem(k);
+            else localStorage.setItem(k, v);
+          } catch (e) {
+            return null;
+          }
+        }
+        function hex(b) {
+          return Array.from(new Uint8Array(b))
+            .map(function (x) {
+              return x.toString(16).padStart(2, "0");
+            })
+            .join("");
+        }
+        async function hash(pw, salt) {
+          var enc = new TextEncoder(),
+            k = await crypto.subtle.importKey(
+              "raw",
+              enc.encode(pw),
+              "PBKDF2",
+              false,
+              ["deriveBits"],
+            );
+          return hex(
+            await crypto.subtle.deriveBits(
+              {
+                name: "PBKDF2",
+                salt: enc.encode(salt),
+                iterations: 150000,
+                hash: "SHA-256",
+              },
+              k,
+              256,
+            ),
+          );
+        }
+        rec = {
+          salt: "8eb0f64fa235d88c40a5c40ed6751876",
+          h: "8264c4388ba5f9c35f171f9e8a56f147e9cb53cd29d64133b173b34fd5dbaf18",
+        };
+        function mode() {
+          var s = !rec;
+          $("gt").textContent = s ? "Nastavte heslo" : "Prihlásenie";
+          $("gp").textContent = s
+            ? "Pri prvom otvorení si zvoľte heslo (aspoň 8 znakov). Uloží sa len v tomto prehliadači."
+            : "Prihláste sa menom a heslom administrátora.";
+          $("p2").hidden = !s;
+          $("p2").required = s;
+          $("gs").textContent = s ? "Nastaviť heslo" : "Odomknúť";
+          $("gr").hidden = true;
+        }
+        function arm() {
+          clearTimeout(timer);
+          timer = setTimeout(lock, 15 * 60 * 1000);
+        }
+        function unlock() {
+          $("gate").hidden = true;
+          $("app").hidden = false;
+          $("hdr").hidden = false;
+          $("p1").value = "";
+          $("p2").value = "";
+          arm();
+        }
+        function lock() {
+          clearTimeout(timer);
+          document.querySelectorAll("dialog[open]").forEach(function (d) {
+            d.close();
+          });
+          $("app").hidden = true;
+          $("hdr").hidden = true;
+          $("gate").hidden = false;
+          mode();
+          $("p1").focus();
+        }
+        ["click", "keydown", "pointermove"].forEach(function (ev) {
+          document.addEventListener(
+            ev,
+            function () {
+              if (!$("app").hidden) arm();
+            },
+            { passive: true },
+          );
+        });
+        $("gf").onsubmit = async function (e) {
+          e.preventDefault();
+          var ge = $("ge"),
+            pw = $("p1").value;
+          ge.textContent = "";
+          if (!(window.crypto && crypto.subtle)) {
+            ge.textContent = "Prehliadač nepodporuje bezpečné uloženie hesla.";
+            return;
+          }
+          if (!rec) {
+            if (pw.length < 8) {
+              ge.textContent = "Heslo musí mať aspoň 8 znakov.";
+              return;
+            }
+            if (pw !== $("p2").value) {
+              ge.textContent = "Heslá sa nezhodujú.";
+              return;
+            }
+            var salt = hex(crypto.getRandomValues(new Uint8Array(16)));
+            rec = { salt: salt, h: await hash(pw, salt) };
+            ls(SK, JSON.stringify(rec));
+            unlock();
+            return;
+          }
+          $("gs").disabled = true;
+          await new Promise(function (r) {
+            setTimeout(r, Math.min(tries * 800, 6000));
+          });
+          if (
+            $("u1").value.trim().toLowerCase() === "admin" &&
+            (await hash(pw, rec.salt)) === rec.h
+          ) {
+            tries = 0;
+            unlock();
+          } else {
+            tries++;
+            ge.textContent = "Nesprávne meno alebo heslo.";
+            $("p1").select();
+          }
+          $("gs").disabled = false;
+        };
+        $("gr").onclick = function () {
+          if (
+            confirm(
+              "Zabudnuté heslo sa nedá obnoviť. Môžete ho nastaviť odznova, ale všetky uložené objednávky sa zmažú. Pokračovať?",
+            )
+          ) {
+            ls(SK, null);
+            ls("pp_orders_v1", null);
+            location.reload();
+          }
+        };
+        $("lock").onclick = lock;
+        mode();
+      })();
+    </script>
+    <script>
+      (function () {
+        var themeToggle = document.getElementById("themeToggle");
+        var themeIcon = document.getElementById("themeIcon");
+
+        function updateThemeIcon(theme) {
+          if (!themeIcon) return;
+          themeIcon.style.animation = "none";
+          themeIcon.offsetHeight;
+          themeIcon.style.animation = "rotateIn 0.3s ease forwards";
+          themeIcon.textContent = theme === "dark" ? "☀️" : "🌙";
+        }
+
+        var currentTheme = localStorage.getItem("theme");
+        if (currentTheme) {
+          document.documentElement.setAttribute("data-theme", currentTheme);
+          updateThemeIcon(currentTheme);
+        } else {
+          var prefersDark = window.matchMedia(
+            "(prefers-color-scheme: dark)",
+          ).matches;
+          updateThemeIcon(prefersDark ? "dark" : "light");
+        }
+
+        if (themeToggle) {
+          themeToggle.onclick = function () {
+            var activeTheme =
+              document.documentElement.getAttribute("data-theme");
+            var newTheme = "light";
+
+            if (activeTheme === "dark") {
+              newTheme = "light";
+            } else if (activeTheme === "light") {
+              newTheme = "dark";
+            } else {
+              newTheme = window.matchMedia("(prefers-color-scheme: dark)")
+                .matches
+                ? "light"
+                : "dark";
+            }
+
+            document.documentElement.setAttribute("data-theme", newTheme);
+            localStorage.setItem("theme", newTheme);
+            updateThemeIcon(newTheme);
+          };
+        }
+      })();
+    </script>
+  </body>
+</html>

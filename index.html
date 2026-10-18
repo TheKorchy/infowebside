@@ -1,0 +1,1835 @@
+<!doctype html>
+<html lang="sk">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Pixel & Prompt – webstránky od programátora s AI</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap"
+    />
+    <style>
+      :root {
+        --bg: #fff;
+        --soft: #eef3fb;
+        --surface: #fff;
+        --ink: #0f1a30;
+        --muted: #5b6a85;
+        --blue: #3b82f6;
+        --navy: #050b1f;
+        --navy2: #1a2338;
+        --line: #dfe6f2;
+        --shadow: 0 12px 34px rgba(15, 26, 48, 0.12);
+        --f: "Plus Jakarta Sans", "Segoe UI", Arial, sans-serif;
+        box-sizing: border-box;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        color-scheme: light;
+        transition:
+          background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #0b1226;
+          --soft: #121b36;
+          --surface: #16203d;
+          --ink: #eaf0fb;
+          --muted: #9fb0cc;
+          --line: #25335a;
+          --shadow: 0 12px 34px rgba(0, 0, 0, 0.4);
+          color-scheme: dark;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #0b1226;
+        --soft: #121b36;
+        --surface: #16203d;
+        --ink: #eaf0fb;
+        --muted: #9fb0cc;
+        --line: #25335a;
+        --shadow: 0 12px 34px rgba(0, 0, 0, 0.4);
+        color-scheme: dark;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 70px;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font: 400 1rem/1.6 var(--f);
+        transition:
+          background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        line-height: 1.12;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      :focus-visible {
+        outline: 3px solid var(--blue);
+        outline-offset: 3px;
+      }
+      .w {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 22px;
+      }
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: var(--navy);
+        color: #fff;
+        padding-top: env(safe-area-inset-top, 0px);
+        border-bottom: 1px solid #16213f;
+      }
+      .nav .w {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 56px;
+      }
+      .logo {
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .logo i {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        background: var(--blue);
+        display: inline-block;
+        position: relative;
+      }
+      .logo i::after {
+        content: "";
+        position: absolute;
+        inset: 6px;
+        border: 2px solid #fff;
+        border-radius: 50%;
+      }
+      .logo em {
+        font-style: normal;
+        color: var(--blue);
+      }
+      .links {
+        display: flex;
+        gap: 26px;
+        font-size: 0.88rem;
+        font-weight: 500;
+        color: #c9d4ea;
+      }
+      .links a:hover {
+        color: #fff;
+      }
+      .btn {
+        display: inline-block;
+        background: var(--blue);
+        color: #fff;
+        padding: 12px 22px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.92rem;
+        border: 0;
+        cursor: pointer;
+        font-family: inherit;
+        transition:
+          transform 0.15s,
+          background 0.15s;
+      }
+      .btn:hover {
+        background: #2f6fe0;
+        transform: translateY(-1px);
+      }
+      .btn.o {
+        background: transparent;
+        border: 1px solid #fff;
+        color: #fff;
+      }
+      .btn.o:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+      .btn.sm {
+        padding: 8px 16px;
+        font-size: 0.82rem;
+      }
+      .hero {
+        position: relative;
+        background: var(--navy);
+        color: #fff;
+        text-align: center;
+        padding: 110px 0 130px;
+        overflow: hidden;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            60% 70% at 70% 20%,
+            rgba(59, 130, 246, 0.35),
+            transparent 70%
+          ),
+          radial-gradient(
+            50% 60% at 15% 80%,
+            rgba(59, 130, 246, 0.18),
+            transparent 70%
+          );
+      }
+      .hero pre {
+        position: absolute;
+        inset: 0;
+        margin: 0;
+        padding: 30px 6%;
+        font:
+          500 15px/1.9 ui-monospace,
+          Menlo,
+          Consolas,
+          monospace;
+        color: #6f8fd8;
+        opacity: 0.22;
+        filter: blur(2.5px);
+        text-align: left;
+        overflow: hidden;
+        white-space: pre;
+      }
+      .hero .w {
+        position: relative;
+      }
+      .hero h1 {
+        font-size: clamp(2.3rem, 6vw, 4rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+      .hero h1 b {
+        color: var(--blue);
+      }
+      .hero p {
+        color: #c3cee6;
+        max-width: 32em;
+        margin: 18px auto 28px;
+        font-size: 1.05rem;
+      }
+      .stats {
+        position: relative;
+        z-index: 2;
+        margin-top: -62px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        max-width: 720px;
+        margin-inline: auto;
+        padding: 0 22px;
+      }
+      .stat {
+        background: var(--surface);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+        text-align: center;
+        padding: 20px 10px;
+        transition:
+          background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .stat b {
+        display: block;
+        font-size: 1.7rem;
+        font-weight: 800;
+      }
+      .stat span {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: var(--blue);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      section {
+        padding: 84px 0;
+      }
+      .kick {
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--blue);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      h2 {
+        font-size: clamp(1.7rem, 3.4vw, 2.3rem);
+        font-weight: 500;
+      }
+      h2 b {
+        font-weight: 800;
+        color: var(--blue);
+      }
+      .lead {
+        color: var(--muted);
+        margin: 14px 0 0;
+        max-width: 36em;
+      }
+      .why {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 64px;
+        align-items: center;
+      }
+      .vis {
+        position: relative;
+        padding: 0 0 26px 26px;
+      }
+      .vis::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 26px;
+        right: 26px;
+        bottom: 0;
+        background: var(--soft);
+        border-radius: 26px;
+        transform: rotate(-2deg);
+        transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .code {
+        position: relative;
+        background: var(--navy2);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        color: #cfe0ff;
+        font:
+          500 0.85rem/1.9 ui-monospace,
+          Menlo,
+          Consolas,
+          monospace;
+      }
+      .code .bar {
+        display: flex;
+        gap: 6px;
+        padding: 11px 14px;
+        background: #111a2e;
+      }
+      .code .bar i {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #33415f;
+      }
+      .code pre {
+        margin: 0;
+        padding: 18px 20px 22px;
+        white-space: pre-wrap;
+      }
+      .k {
+        color: #7aa8ff;
+      }
+      .s {
+        color: #7ee0b0;
+      }
+      .c {
+        color: #7a89aa;
+      }
+      .badge {
+        position: absolute;
+        right: -6px;
+        bottom: 6px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+        border-radius: 12px;
+        padding: 10px 16px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        transition:
+          background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .badge i {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--blue);
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-style: normal;
+        font-size: 0.8rem;
+      }
+      .feat {
+        display: grid;
+        gap: 18px;
+        margin-top: 26px;
+      }
+      .feat div {
+        display: grid;
+        grid-template-columns: 40px 1fr;
+        gap: 14px;
+      }
+      .ic {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        font-size: 1rem;
+        transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .feat b {
+        display: block;
+        font-size: 0.95rem;
+      }
+      .feat span {
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      .soft {
+        background: var(--soft);
+        transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .head {
+        text-align: center;
+        margin-bottom: 44px;
+      }
+      .head .lead {
+        margin-inline: auto;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      .card {
+        background: var(--surface);
+        border-radius: 16px;
+        padding: 26px;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--line);
+        transition:
+          background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .card .ic {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: var(--blue);
+        color: #fff;
+        margin-bottom: 16px;
+      }
+      .card h3 {
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+      }
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+      .pk .card.main {
+        border: 2px solid var(--blue);
+        position: relative;
+      }
+      .pk .tag {
+        position: absolute;
+        top: -12px;
+        left: 22px;
+        background: var(--blue);
+        color: #fff;
+        font-size: 0.7rem;
+        font-weight: 800;
+        padding: 3px 12px;
+        border-radius: 99px;
+      }
+      .pk ul {
+        padding-left: 1.1em;
+        margin: 14px 0 0;
+        font-size: 0.9rem;
+      }
+      .pk li {
+        margin: 5px 0;
+      }
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        position: relative;
+      }
+      .steps::before {
+        content: "";
+        position: absolute;
+        top: 22px;
+        left: 8%;
+        right: 8%;
+        height: 2px;
+        background: var(--line);
+        transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .step {
+        position: relative;
+        text-align: center;
+      }
+      .step i {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: var(--blue);
+        color: #fff;
+        font-style: normal;
+        font-weight: 800;
+        display: grid;
+        place-items: center;
+        margin: 0 auto 14px;
+        box-shadow: 0 0 0 6px var(--bg);
+        transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .soft .step i {
+        box-shadow: 0 0 0 6px var(--soft);
+      }
+      .step b {
+        display: block;
+      }
+      .step span {
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+      .cta {
+        background: var(--navy2);
+        color: #fff;
+        border-radius: 22px;
+        text-align: center;
+        padding: 54px 24px;
+        max-width: 760px;
+        margin: 0 auto;
+      }
+      .cta h2 {
+        font-weight: 800;
+        font-size: clamp(1.5rem, 3vw, 2rem);
+      }
+      .cta p {
+        color: #b8c4df;
+        margin: 10px 0 24px;
+      }
+      .cta .row {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .contact {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-top: 10px;
+      }
+      .contact label {
+        display: block;
+        font-weight: 700;
+        font-size: 0.85rem;
+        margin-bottom: 14px;
+      }
+      .contact input,
+      .contact textarea {
+        width: 100%;
+        margin-top: 6px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--surface);
+        color: var(--ink);
+        font: inherit;
+        transition:
+          background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .contact textarea {
+        min-height: 110px;
+        resize: vertical;
+      }
+      footer {
+        background: var(--navy);
+        color: #fff;
+        text-align: center;
+        padding: 48px 0 calc(34px + env(safe-area-inset-bottom, 0px));
+      }
+      footer p {
+        color: #9fb0cc;
+        font-size: 0.85rem;
+        margin: 6px 0;
+      }
+      .soc {
+        display: flex;
+        gap: 14px;
+        justify-content: center;
+        margin: 18px 0;
+      }
+      .soc a {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #16213f;
+        display: grid;
+        place-items: center;
+        font-size: 0.8rem;
+        font-weight: 800;
+      }
+      .soc a:hover {
+        background: var(--blue);
+      }
+      @media (max-width: 860px) {
+        .links {
+          display: none;
+        }
+        .why,
+        .contact {
+          grid-template-columns: 1fr;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .steps {
+          grid-template-columns: 1fr 1fr;
+          row-gap: 30px;
+        }
+        .steps::before {
+          display: none;
+        }
+        .hero {
+          padding: 80px 0 110px;
+        }
+        .stats {
+          gap: 10px;
+        }
+        .stat b {
+          font-size: 1.3rem;
+        }
+        section {
+          padding: 64px 0;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        .btn {
+          transition: none;
+        }
+      }
+      .pk .card {
+        display: flex;
+        flex-direction: column;
+      }
+      .pk .card ul {
+        margin-bottom: 20px;
+      }
+      .pick {
+        margin-top: auto;
+      }
+      fieldset {
+        border: 0;
+        padding: 0;
+        margin: 0 0 16px;
+      }
+      legend {
+        font-weight: 700;
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+        padding: 0;
+      }
+      .opts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .opt,
+      .chip {
+        font: 600 0.85rem var(--f);
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1.5px solid var(--line);
+        background: var(--surface);
+        color: var(--ink);
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          border-color 0.15s;
+      }
+      .opt:hover,
+      .chip:hover {
+        border-color: var(--blue);
+      }
+      .opt[aria-pressed="true"],
+      .chip[aria-pressed="true"] {
+        background: var(--blue);
+        border-color: var(--blue);
+        color: #fff;
+      }
+      .chip {
+        border-radius: 99px;
+        padding: 7px 14px;
+        font-weight: 500;
+      }
+      .contact select {
+        width: 100%;
+        margin-top: 6px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--surface);
+        color: var(--ink);
+        font: inherit;
+        transition:
+          background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .sum {
+        background: var(--navy2);
+        color: #cfe0ff;
+        border-radius: 12px;
+        padding: 14px 16px;
+        font:
+          500 0.8rem/1.6 ui-monospace,
+          Menlo,
+          Consolas,
+          monospace;
+        white-space: pre-wrap;
+        margin: 6px 0 16px;
+      }
+      .sumh {
+        font-weight: 700;
+        font-size: 0.85rem;
+        margin-top: 4px;
+      }
+      .acts {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .err {
+        color: #e5484d;
+        font-weight: 600;
+        font-size: 0.88rem;
+        min-height: 1.4em;
+        margin: 10px 0 0;
+      }
+      .stats {
+        max-width: 920px;
+      }
+      .stat {
+        text-align: left;
+        display: grid;
+        grid-template-columns: 40px 1fr;
+        gap: 0 12px;
+        align-items: center;
+        padding: 18px;
+      }
+      .stat em {
+        grid-row: span 2;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: var(--blue);
+        color: #fff;
+        font-style: normal;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+      }
+      .stat b {
+        font-size: 0.95rem;
+        line-height: 1.25;
+      }
+      .stat span {
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--muted);
+        letter-spacing: 0;
+        text-transform: none;
+      }
+      .pk .card[data-pkg] {
+        cursor: pointer;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s,
+          border-color 0.15s;
+      }
+      .pk .card[data-pkg]:hover {
+        transform: translateY(-3px);
+        border-color: var(--blue);
+      }
+      .pk .card[aria-pressed="true"] {
+        border-color: var(--blue);
+        background: var(--soft);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+      }
+      .pk .card[aria-pressed="true"]::after {
+        content: "✓ Vybrané";
+        color: var(--blue);
+        font-weight: 800;
+        font-size: 0.9rem;
+      }
+      .chosen {
+        margin: 14px 0 0;
+        font-size: 0.95rem;
+        color: var(--muted);
+      }
+      .chosen a {
+        color: var(--blue);
+        font-weight: 700;
+      }
+      .chosen b {
+        color: var(--ink);
+      }
+      @media (max-width: 860px) {
+        .stats {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .pk .card[data-pkg] {
+          transition: none;
+        }
+      }
+      .nav {
+        background: rgba(5, 11, 31, 0.88);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+      .nav .links a {
+        position: relative;
+        padding: 4px 0;
+      }
+      .nav .links a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        height: 2px;
+        width: 0;
+        background: var(--blue);
+        transition: width 0.2s;
+      }
+      .nav .links a:hover::after {
+        width: 100%;
+      }
+      .hero {
+        padding: 124px 0 160px;
+      }
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 46px 46px;
+        -webkit-mask-image: radial-gradient(
+          ellipse at 50% 40%,
+          #000 25%,
+          transparent 75%
+        );
+        mask-image: radial-gradient(
+          ellipse at 50% 40%,
+          #000 25%,
+          transparent 75%
+        );
+      }
+      .hero .w {
+        z-index: 2;
+      }
+      .hero h1 {
+        font-size: clamp(2.4rem, 6.5vw, 4.6rem);
+        line-height: 1.04;
+        max-width: 12em;
+        margin-inline: auto;
+      }
+      .hero h1 b {
+        background: linear-gradient(90deg, #60a5fa, #3b82f6 60%, #818cf8);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .hero p {
+        font-size: 1.15rem;
+      }
+      .row2 {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .btn {
+        box-shadow: 0 8px 22px rgba(59, 130, 246, 0.35);
+      }
+      .btn.o,
+      .btn.sm {
+        box-shadow: none;
+      }
+      .btn.lg {
+        padding: 15px 28px;
+      }
+      .stats {
+        margin-top: -78px;
+        max-width: 960px;
+      }
+      .stat {
+        border: 1px solid var(--line);
+        transition:
+          transform 0.2s,
+          background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .stat:hover {
+        transform: translateY(-3px);
+      }
+      .kick {
+        display: inline-block;
+        background: var(--soft);
+        padding: 4px 14px;
+        border-radius: 99px;
+        margin-bottom: 14px;
+        transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .soft .kick {
+        background: var(--surface);
+      }
+      h2 {
+        letter-spacing: -0.02em;
+      }
+      .card {
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .grid .card:not([data-pkg]):hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 40px rgba(59, 130, 246, 0.18);
+      }
+      .card .ic {
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+        box-shadow: 0 8px 18px rgba(59, 130, 246, 0.35);
+      }
+      .code {
+        box-shadow: 0 30px 60px rgba(15, 26, 48, 0.28);
+      }
+      .step i {
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+      }
+      .cta {
+        background:
+          radial-gradient(
+            70% 120% at 80% 0,
+            rgba(59, 130, 246, 0.35),
+            transparent 60%
+          ),
+          var(--navy2);
+        border: 1px solid #26324f;
+        padding: 64px 24px;
+      }
+      .contact > div:last-child {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 28px;
+        box-shadow: var(--shadow);
+        transition:
+          background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .contact input:focus,
+      .contact textarea:focus,
+      .contact select:focus {
+        outline: none;
+        border-color: var(--blue);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+      }
+      .ticks {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0 0;
+        display: grid;
+        gap: 10px;
+      }
+      .ticks li {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        font-weight: 600;
+        font-size: 0.92rem;
+      }
+      .ticks li::before {
+        content: "✓";
+        flex: none;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--blue);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-size: 0.72rem;
+      }
+      footer {
+        border-top: 3px solid transparent;
+        border-image: linear-gradient(90deg, transparent, #3b82f6, transparent)
+          1;
+      }
+      @media (max-width: 860px) {
+        .hero {
+          padding: 88px 0 130px;
+        }
+        .stats {
+          margin-top: -60px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .stat,
+        .card {
+          transition: none;
+        }
+        .stat:hover,
+        .grid .card:hover {
+          transform: none;
+        }
+      }
+      .cmp {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        max-width: 760px;
+        margin: 28px auto 0;
+        text-align: left;
+      }
+      .cmp > div {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-left: 4px solid var(--blue);
+        border-radius: 12px;
+        padding: 14px 18px;
+        transition:
+          background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .cmp b {
+        display: block;
+        margin-bottom: 2px;
+      }
+      .cmp span {
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+      @media (max-width: 860px) {
+        .cmp {
+          grid-template-columns: 1fr;
+        }
+      }
+      .pk .card.main {
+        border: 1px solid var(--line);
+      }
+      .pk .card[data-pkg]:not([aria-pressed="true"]):hover {
+        border-color: var(--line);
+        transform: translateY(-3px);
+      }
+      .pk .card[data-pkg][aria-pressed="true"] {
+        border: 2px solid var(--blue);
+        padding: 25px;
+        background: color-mix(in srgb, var(--blue) 12%, var(--surface));
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.28);
+      }
+
+      /* Styling pre dynamické tlačidlo prepínania módu s animáciami a ikonami */
+      .theme-toggle-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        padding: 8px 14px;
+        border-radius: 99px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(8px);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .theme-toggle-btn:hover {
+        background: rgba(59, 130, 246, 0.3);
+        border-color: var(--blue);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      }
+
+      .theme-toggle-btn:active {
+        transform: translateY(0);
+      }
+
+      .theme-toggle-btn .icon-wrapper {
+        position: relative;
+        width: 18px;
+        height: 18px;
+        display: inline-block;
+      }
+
+      .theme-toggle-btn svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        transition:
+          transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+          opacity 0.3s ease;
+      }
+
+      /* Animácie pre ikony pri prepínaní */
+      :root[data-theme="light"] .theme-toggle-btn .sun-icon {
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+      }
+      :root[data-theme="light"] .theme-toggle-btn .moon-icon {
+        opacity: 0;
+        transform: rotate(-90deg) scale(0.5);
+      }
+
+      :root[data-theme="dark"] .theme-toggle-btn .sun-icon {
+        opacity: 0;
+        transform: rotate(90deg) scale(0.5);
+      }
+      :root[data-theme="dark"] .theme-toggle-btn .moon-icon {
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+      }
+
+      /* Predvolené nastavenie pre auto/light ak nie je nastavené data-theme */
+      :root:not([data-theme="dark"]) .theme-toggle-btn .sun-icon {
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+      }
+      :root:not([data-theme="dark"]) .theme-toggle-btn .moon-icon {
+        opacity: 0;
+        transform: rotate(-90deg) scale(0.5);
+      }
+
+      .nav-right-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="nav">
+      <div class="w">
+        <a class="logo" href="#"><i></i>Pixel <em>&amp; Prompt</em></a>
+        <nav class="links">
+          <a href="#domov">Domov</a><a href="#preco">O mne</a
+          ><a href="#sluzby">Služby</a><a href="#postup">Postup</a
+          ><a href="#kontakt">Kontakt</a>
+        </nav>
+        <div class="nav-right-group">
+          <!-- Dynamické tlačidlo pre Light/Dark mode s ikonami a animáciami -->
+          <button
+            class="theme-toggle-btn"
+            id="themeToggle"
+            aria-label="Prepnúť tmavý / svetlý režim"
+          >
+            <span class="icon-wrapper">
+              <!-- Sun Icon -->
+              <svg
+                class="sun-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="5"></circle>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
+                ></path>
+              </svg>
+              <!-- Moon Icon -->
+              <svg
+                class="moon-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"
+                ></path>
+              </svg>
+            </span>
+            <span class="theme-text">Mód</span>
+          </button>
+          <a class="btn sm" href="#kontakt">Cenová ponuka</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="hero" id="domov">
+        <pre aria-hidden="true">
+&lt;section class="hero"&gt;
+  &lt;h1&gt;Váš nový web&lt;/h1&gt;
+  &lt;p&gt;Rýchly, bezpečný, moderný&lt;/p&gt;
+&lt;/section&gt;
+const web = await build({ design, kód, AI });
+export default function Firma() { return &lt;Web /&gt; }
+@media (max-width: 800px) { .menu { display: none } }
+git commit -m "nový web spustený"</pre
+        >
+        <div class="w">
+          <h1>Web, ktorý <b>pracuje</b> za vašu firmu.</h1>
+          <p>
+            Rýchlo, prehľadne a na mieru. Váš web v rukách programátora, ktorý
+            využíva silu AI.
+          </p>
+          <div class="row2">
+            <a class="btn" href="#balicky">Vybrať balíček</a
+            ><a class="btn o" href="#sluzby">Pozrieť služby</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <em>✓</em><b>Vyštudovaný programátor</b
+          ><span>Kód píše a kontroluje človek</span>
+        </div>
+        <div class="stat">
+          <em>€</em><b>Pevná cena vopred</b><span>Bez skrytých poplatkov</span>
+        </div>
+        <div class="stat">
+          <em>@</em><b>Odpoveď do 2 pracovných dní</b
+          ><span>Na každú správu</span>
+        </div>
+      </div>
+
+      <section id="preco">
+        <div class="w why">
+          <div class="vis">
+            <div class="code">
+              <div class="bar"><i></i><i></i><i></i></div>
+              <pre><span class="c">// ručne písaný kód + AI asistent</span>
+<span class="k">const</span> web = {
+  dizajn: <span class="s">"na mieru"</span>,
+  rýchlosť: <span class="s">"100/100"</span>,
+  mobil: <span class="k">true</span>,
+  kontrola: <span class="s">"programátor"</span>
+};</pre>
+            </div>
+            <div class="badge"><i>✓</i>Overené človekom</div>
+          </div>
+          <div>
+            <div class="kick">Prečo si ma vybrať?</div>
+            <h2>Váš partner v online svete <b>od nápadu po spustenie</b></h2>
+            <p class="lead">
+              Kombinujem vzdelanie programátora s modernými AI nástrojmi.
+              Dostanete rýchlosť stroja a istotu človeka.
+            </p>
+            <div class="feat">
+              <div>
+                <span class="ic">⚡</span>
+                <p style="margin: 0">
+                  <b>Rýchla dodávka</b
+                  ><span>AI skracuje rutinu, takže web máte skôr.</span>
+                </p>
+              </div>
+              <div>
+                <span class="ic">🛡️</span>
+                <p style="margin: 0">
+                  <b>Čistý a bezpečný kód</b
+                  ><span>Každý riadok kontrolujem a testujem osobne.</span>
+                </p>
+              </div>
+              <div>
+                <span class="ic">🎯</span>
+                <p style="margin: 0">
+                  <b>Dizajn podľa vašej značky</b
+                  ><span>Žiadne šablóny, web vyzerá ako váš.</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="soft" id="sluzby">
+        <div class="w">
+          <div class="head">
+            <div class="kick">Služby</div>
+            <h2>Všetko, čo váš web <b>potrebuje</b></h2>
+            <p class="lead">
+              Od jednoduchej vizitky po web s vlastnými funkciami.
+            </p>
+          </div>
+          <div class="grid">
+            <div class="card">
+              <span class="ic">🖥️</span>
+              <h3>Firemné weby</h3>
+              <p>
+                Moderné stránky, ktoré budia dôveru a privádzajú zákazníkov.
+              </p>
+            </div>
+            <div class="card">
+              <span class="ic">🛒</span>
+              <h3>E-shopy</h3>
+              <p>
+                Predaj online s platbami, skladom a jednoduchou správou
+                objednávok.
+              </p>
+            </div>
+            <div class="card">
+              <span class="ic">📅</span>
+              <h3>Rezervačné systémy</h3>
+              <p>Zákazníci sa objednajú sami, vy šetríte čas na telefónoch.</p>
+            </div>
+            <div class="card">
+              <span class="ic">🤖</span>
+              <h3>AI funkcie</h3>
+              <p>
+                Chatbot, automatické odpovede a vyhľadávanie priamo na vašom
+                webe.
+              </p>
+            </div>
+            <div class="card">
+              <span class="ic">🚀</span>
+              <h3>Rýchlosť a SEO</h3>
+              <p>
+                Optimalizácia, vďaka ktorej vás nájdu na Googli a web sa načíta
+                hneď.
+              </p>
+            </div>
+            <div class="card">
+              <span class="ic">🔧</span>
+              <h3>Správa a podpora</h3>
+              <p>
+                Úpravy, aktualizácie a zálohy, aby ste sa o web nemuseli starať.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="soft" id="databazy">
+        <div class="w">
+          <div class="head">
+            <div class="kick">Databázy a typy webov</div>
+            <h2>Statický alebo <b>dynamický web?</b></h2>
+            <p class="lead">
+              Pomôžem vám vybrať správne riešenie. Viem postaviť oba typy
+              vrátane databáz a PHP backendu.
+            </p>
+            <div class="cmp">
+              <div>
+                <b>Statický web</b
+                ><span
+                  >Hotové stránky bez databázy. Rýchle, lacné a jednoduché na
+                  prevádzku.</span
+                >
+              </div>
+              <div>
+                <b>Dynamický web</b
+                ><span
+                  >Obsah z databázy, prihlásenie a administrácia. Web sa dá
+                  meniť bez zásahu do kódu.</span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="grid">
+            <div class="card">
+              <span class="ic">🗄️</span>
+              <h3>Databázy a backend</h3>
+              <p>
+                Návrh databázy (MySQL), PHP a API, aby váš web vedel ukladať a
+                spracovávať dáta.
+              </p>
+            </div>
+            <div class="card">
+              <span class="ic">⚡</span>
+              <h3>Statické weby</h3>
+              <p>
+                Rýchle stránky bez databázy, ideálne na vizitky a prezentácie.
+              </p>
+            </div>
+            <div class="card">
+              <span class="ic">🔄</span>
+              <h3>Dynamické weby</h3>
+              <p>
+                Administrácia, prihlásenie a formuláre, ktoré ukladajú dáta do
+                databázy.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="balicky">
+        <div class="w pk">
+          <div class="head">
+            <div class="kick">Balíčky</div>
+            <h2>Vyberte si <b>podľa rozsahu</b></h2>
+            <p class="lead">Po konzultácii dostanete ponuku s pevnou cenou.</p>
+            <p class="chosen" id="chosen" aria-live="polite">
+              Kliknite na balíček, ktorý vás zaujal.
+            </p>
+          </div>
+          <div class="grid">
+            <div
+              class="card"
+              data-pkg="Vizitka"
+              role="button"
+              tabindex="0"
+              aria-pressed="false"
+            >
+              <h3>Vizitka</h3>
+              <p>Jednostránkový web pre živnostníkov.</p>
+              <ul>
+                <li>Moderný dizajn</li>
+                <li>Mobilná verzia</li>
+                <li>Kontaktný formulár</li>
+              </ul>
+            </div>
+            <div
+              class="card main"
+              data-pkg="Firemný web"
+              role="button"
+              tabindex="0"
+              aria-pressed="false"
+            >
+              <span class="tag">Najčastejšie</span>
+              <h3>Firemný web</h3>
+              <p>Viacstránkový web s vlastným dizajnom.</p>
+              <ul>
+                <li>Až 8 podstránok</li>
+                <li>Úprava obsahu bez programátora</li>
+                <li>SEO a analytika</li>
+              </ul>
+            </div>
+            <div
+              class="card"
+              data-pkg="Web na mieru"
+              role="button"
+              tabindex="0"
+              aria-pressed="false"
+            >
+              <h3>Web na mieru</h3>
+              <p>Vlastné funkcie a prepojenia.</p>
+              <ul>
+                <li>Rezervácie alebo e-shop</li>
+                <li>Integrácie a AI</li>
+                <li>Priebežná podpora</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="soft" id="postup">
+        <div class="w">
+          <div class="head">
+            <div class="kick">Postup</div>
+            <h2>Od prvého hovoru <b>po spustenie</b></h2>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <i>1</i><b>Konzultácia</b><span>Zistím, čo potrebujete.</span>
+            </div>
+            <div class="step">
+              <i>2</i><b>Návrh</b><span>Ukážem vám náčrt a ukážku.</span>
+            </div>
+            <div class="step">
+              <i>3</i><b>Vývoj</b><span>Staviam web, vy komentujete.</span>
+            </div>
+            <div class="step">
+              <i>4</i><b>Spustenie</b
+              ><span>Nasadím, otestujem, ostávam nablízku.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="w">
+          <div class="cta">
+            <h2>Pripravení na web bez starostí?</h2>
+            <p>
+              Napíšte pár viet o vašom projekte a ozvem sa do dvoch pracovných
+              dní.
+            </p>
+            <div class="row">
+              <a class="btn" href="#kontakt">Nezáväzná konzultácia</a
+              ><a class="btn o" href="mailto:pixelprompt.web@gmail.com"
+                >Napísať e-mail</a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="kontakt" style="padding-top: 0">
+        <div class="w">
+          <div class="head">
+            <div class="kick">Kontakt</div>
+            <h2>Povedzte mi o <b>vašom projekte</b></h2>
+          </div>
+          <div class="contact">
+            <div>
+              <p class="lead" style="margin-top: 0">
+                Rád si vypočujem váš nápad a poradím, čo má zmysel.
+              </p>
+              <p>
+                <b>E-mail:</b>
+                <a href="mailto:pixelprompt.web@gmail.com" style="color: var(--blue)"
+                  >pixelprompt.web@gmail.com</a
+                >
+              </p>
+              <p><b>Odpoveď:</b> do 2 pracovných dní</p>
+              <ul class="ticks">
+                <li>Konzultácia je nezáväzná</li>
+                <li>Pevná cena pred začiatkom práce</li>
+                <li>Odpoviem osobne, nie automat</li>
+              </ul>
+            </div>
+            <div>
+              <fieldset>
+                <legend>1. Vyberte balíček</legend>
+                <div class="opts">
+                  <button
+                    type="button"
+                    class="opt"
+                    data-pkg="Vizitka"
+                    aria-pressed="false"
+                  >
+                    Vizitka
+                  </button>
+                  <button
+                    type="button"
+                    class="opt"
+                    data-pkg="Firemný web"
+                    aria-pressed="false"
+                  >
+                    Firemný web
+                  </button>
+                  <button
+                    type="button"
+                    class="opt"
+                    data-pkg="Web na mieru"
+                    aria-pressed="false"
+                  >
+                    Web na mieru
+                  </button>
+                  <button
+                    type="button"
+                    class="opt"
+                    data-pkg="Neviem, poraďte mi"
+                    aria-pressed="false"
+                  >
+                    Neviem, poraďte mi
+                  </button>
+                </div>
+              </fieldset>
+              <fieldset>
+                <legend>2. Doplnky (môžete vybrať viac)</legend>
+                <div class="opts">
+                  <button
+                    type="button"
+                    class="chip"
+                    data-ex="Rezervačný systém"
+                    aria-pressed="false"
+                  >
+                    Rezervácie
+                  </button>
+                  <button
+                    type="button"
+                    class="chip"
+                    data-ex="E-shop"
+                    aria-pressed="false"
+                  >
+                    E-shop
+                  </button>
+                  <button
+                    type="button"
+                    class="chip"
+                    data-ex="AI funkcie"
+                    aria-pressed="false"
+                  >
+                    AI funkcie
+                  </button>
+                  <button
+                    type="button"
+                    class="chip"
+                    data-ex="Viac jazykov"
+                    aria-pressed="false"
+                  >
+                    Viac jazykov
+                  </button>
+                  <button
+                    type="button"
+                    class="chip"
+                    data-ex="Pomoc s textami a fotkami"
+                    aria-pressed="false"
+                  >
+                    Pomoc s textami
+                  </button>
+                  <button
+                    type="button"
+                    class="chip"
+                    data-ex="Databáza a administrácia"
+                    aria-pressed="false"
+                  >
+                    Databáza a administrácia
+                  </button>
+                  <button
+                    type="button"
+                    class="chip"
+                    data-ex="Správa po spustení"
+                    aria-pressed="false"
+                  >
+                    Správa po spustení
+                  </button>
+                </div>
+              </fieldset>
+              <label
+                >3. Kedy web potrebujete?<select id="t">
+                  <option>Čo najskôr</option>
+                  <option>Do mesiaca</option>
+                  <option>Do troch mesiacov</option>
+                  <option>Nie je naponáhlo</option>
+                </select></label
+              >
+              <label
+                >Meno<input id="n" type="text" autocomplete="name"
+              /></label>
+              <label
+                >E-mail<input id="e" type="email" autocomplete="email"
+              /></label>
+              <label
+                >Popíšte projekt<textarea
+                  id="m"
+                  placeholder="Čím sa firma zaoberá, čo má web robiť, aké stránky sa vám páčia..."
+                ></textarea>
+              </label>
+
+              <div class="acts">
+                <button type="button" class="btn" id="send">
+                  Odoslať e-mailom
+                </button>
+              </div>
+              <p class="err" id="msg" role="status"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="w">
+        <div class="logo" style="justify-content: center">
+          <i></i>Pixel <em>&amp; Prompt</em>
+        </div>
+        <p>Webstránky od programátora s podporou AI</p>
+        <div class="soc">
+          <a href="#" aria-label="Facebook">f</a
+          ><a href="#" aria-label="Instagram">ig</a
+          ><a href="#" aria-label="LinkedIn">in</a>
+        </div>
+        <a class="btn o sm" href="#kontakt">Dohodnúť konzultáciu</a>
+        <p style="margin-top: 24px; font-size: 0.78rem">
+          © 2026 Pixel &amp; Prompt. Všetky práva vyhradené. ·
+          <a
+            href="objednavky.html"
+            target="_blank"
+            rel="noopener"
+            style="text-decoration: underline"
+            >Správa objednávok</a
+          >
+        </p>
+      </div>
+    </footer>
+    <script>
+      (function () {
+        var S = { pkg: "", ex: new Set() },
+          $ = function (i) {
+            return document.getElementById(i);
+          };
+        var opts = document.querySelectorAll(".opt"),
+          chips = document.querySelectorAll(".chip");
+        function msg(t) {
+          $("msg").textContent = t;
+        }
+        function text() {
+          return [
+            "OBJEDNÁVKA WEBU",
+            "Balíček: " + (S.pkg || "(nevybraný)"),
+            "Doplnky: " + (S.ex.size ? Array.from(S.ex).join(", ") : "žiadne"),
+            "Termín: " + $("t").value,
+            "Meno: " + ($("n").value.trim() || "-"),
+            "E-mail: " + ($("e").value.trim() || "-"),
+            "",
+            "Popis projektu:",
+            $("m").value.trim() || "-",
+          ].join("\n");
+        }
+        function upd() {
+          var c = $("chosen");
+          if (c)
+            c.innerHTML = S.pkg
+              ? "Vybrané: <b>" +
+                S.pkg +
+                '</b> · <a href="#kontakt">pokračovať na objednávku</a>'
+              : "Kliknite na balíček, ktorý vás zaujal.";
+        }
+        function pick(p) {
+          S.pkg = p;
+          opts.forEach(function (b) {
+            b.setAttribute("aria-pressed", b.dataset.pkg === p);
+          });
+          document
+            .querySelectorAll(".pk .card[data-pkg]")
+            .forEach(function (b) {
+              b.setAttribute("aria-pressed", b.dataset.pkg === p);
+            });
+          msg("");
+          upd();
+        }
+        opts.forEach(function (b) {
+          b.onclick = function () {
+            pick(b.dataset.pkg);
+          };
+        });
+        document.querySelectorAll(".pk .card[data-pkg]").forEach(function (b) {
+          b.onclick = function () {
+            pick(b.dataset.pkg);
+          };
+          b.onkeydown = function (e) {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              pick(b.dataset.pkg);
+            }
+          };
+        });
+        chips.forEach(function (b) {
+          b.onclick = function () {
+            var v = b.dataset.ex;
+            S.ex.has(v) ? S.ex.delete(v) : S.ex.add(v);
+            b.setAttribute("aria-pressed", S.ex.has(v));
+            upd();
+          };
+        });
+        ["n", "e", "m", "t"].forEach(function (i) {
+          $(i).addEventListener("input", upd);
+        });
+        function ok() {
+          if (!S.pkg) {
+            msg("Najprv vyberte balíček.");
+            return false;
+          }
+          if (!$("n").value.trim() || !/\S+@\S+\.\S+/.test($("e").value)) {
+            msg("Doplňte meno a platný e-mail.");
+            return false;
+          }
+          msg("");
+          return true;
+        }
+        $("send").onclick = function () {
+          if (ok())
+            location.href =
+              "mailto:pixelprompt.web@gmail.com?subject=" +
+              encodeURIComponent(
+                "Objednávka webu: " + S.pkg + " (" + $("n").value.trim() + ")",
+              ) +
+              "&body=" +
+              encodeURIComponent(text());
+        };
+        var cp = $("copy");
+        if (cp)
+          cp.onclick = function () {
+            if (!ok()) return;
+            try {
+              navigator.clipboard.writeText(text()).then(
+                function () {
+                  msg("Súhrn je skopírovaný.");
+                },
+                function () {
+                  msg("Kopírovanie zlyhalo, označte text ručne.");
+                },
+              );
+            } catch (e) {
+              msg("Kopírovanie zlyhalo, označte text ručne.");
+            }
+          };
+        upd();
+
+        // Logika pre dynamické prepínanie Light / Dark mode
+        var themeToggle = $("themeToggle");
+        if (themeToggle) {
+          // Načítanie uloženej témy alebo preferencie
+          var savedTheme = localStorage.getItem("theme");
+          if (savedTheme) {
+            document.documentElement.setAttribute("data-theme", savedTheme);
+          }
+
+          themeToggle.onclick = function () {
+            var currentTheme =
+              document.documentElement.getAttribute("data-theme");
+            var systemPrefersDark = window.matchMedia(
+              "(prefers-color-scheme: dark)",
+            ).matches;
+            var targetTheme = "dark";
+
+            if (currentTheme === "dark") {
+              targetTheme = "light";
+            } else if (currentTheme === "light") {
+              targetTheme = "dark";
+            } else {
+              // Ak nie je nastavená explicitne, prepneme opozitum systémovej
+              targetTheme = systemPrefersDark ? "light" : "dark";
+            }
+
+            document.documentElement.setAttribute("data-theme", targetTheme);
+            localStorage.setItem("theme", targetTheme);
+          };
+        }
+      })();
+    </script>
+  </body>
+</html>
