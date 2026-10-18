@@ -963,6 +963,30 @@
           min-height: 40px;
         }
       }
+
+      /* ===== Názov a dlhé texty ===== */
+      .top .ttl {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+      }
+      .kt b {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+      .km,
+      td small {
+        overflow-wrap: anywhere;
+      }
+      @media (max-width: 600px) {
+        .top .sp {
+          display: none; /* Pixel&Prompt bez medzier */
+        }
+        .top .ttl {
+          font-size: 1.02rem;
+        }
+      }
     </style>
   </head>
   <body>
@@ -1002,7 +1026,10 @@
     </div>
     <header class="top" id="hdr" hidden>
       <div class="w">
-        <b>Pixel <em>&amp; Prompt</em> · objednávky</b>
+        <b class="ttl"
+          >Pixel<span class="sp"> </span><em>&amp;<span class="sp"> </span>Prompt</em
+          ><span class="tl"> · objednávky</span></b
+        >
         <div class="seg" id="seg">
           <button data-v="board" aria-pressed="true">Tabuľa</button
           ><button data-v="table" aria-pressed="false">Tabuľka</button
