@@ -581,7 +581,7 @@
         cursor: pointer;
       }
 
-      /* --- Pridané štýly pre dynamický Dark/Light Mode prepínač s animáciami --- */
+      /* --- Dynamic Dark/Light Mode Switcher --- */
       .theme-switch-container {
         display: flex;
         align-items: center;
@@ -631,7 +631,7 @@
         animation: rotateIn 0.3s ease forwards;
       }
 
-      /* ===== Responzívne úpravy: tablet a telefón ===== */
+      /* ===== Advanced Responsive Adjustments ===== */
       .w {
         padding-left: max(20px, env(safe-area-inset-left, 0px));
         padding-right: max(20px, env(safe-area-inset-right, 0px));
@@ -641,7 +641,7 @@
         max-height: 88dvh;
       }
 
-      /* Tablet (do 1024px): tabuľa 2 × 2 bez bočného posúvania */
+      /* Tablet (up to 1024px) */
       @media (max-width: 1024px) {
         .board {
           grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -658,7 +658,7 @@
         }
       }
 
-      /* Tablet na výšku a menšie */
+      /* Tablet Vertical (up to 800px) */
       @media (max-width: 800px) {
         .top .w {
           justify-content: space-between;
@@ -691,7 +691,7 @@
         }
       }
 
-      /* Telefón */
+      /* Mobile Phone (up to 600px) */
       @media (max-width: 600px) {
         body {
           font-size: 0.95rem;
@@ -720,7 +720,8 @@
         .k b {
           font-size: 1.5rem;
         }
-        /* Tabuľa: stĺpce sa posúvajú do strany a zapadajú */
+
+        /* Board horizontal smooth snapping */
         .board {
           grid-template-columns: none;
           grid-auto-flow: column;
@@ -745,7 +746,8 @@
         .panel {
           padding: 14px;
         }
-        /* Tabuľka objednávok sa na telefóne zmení na karty */
+
+        /* Responsive Table converted into Cards */
         #v-table table,
         #v-table tbody,
         #v-table tr,
@@ -827,7 +829,8 @@
           height: 92px;
           font-size: 1.4rem;
         }
-        /* Dialógy: skoro na celú obrazovku */
+
+        /* Bottom Dialog Sheet */
         dialog {
           width: 100vw;
           max-width: 100vw;
@@ -857,14 +860,14 @@
         textarea,
         input[type="text"],
         .gb input {
-          font-size: 16px; /* iOS nezoomuje do polí */
+          font-size: 16px; /* Prevent iOS zoom on focus */
         }
         .gb {
           padding: 26px 20px;
         }
       }
 
-      /* Dotykové zariadenia: väčšie ovládacie prvky */
+      /* Touch Target Enhancements */
       @media (pointer: coarse) {
         .kb button {
           min-height: 40px;
@@ -882,7 +885,7 @@
         }
       }
 
-      /* Telefón na šírku */
+      /* Landscape Mode on Phones */
       @media (max-height: 480px) and (orientation: landscape) {
         .gb {
           padding: 18px 20px;
@@ -893,7 +896,7 @@
         }
       }
 
-      /* ===== Ikony: SVG namiesto emoji/znakov ===== */
+      /* SVG Icons styling */
       .ico {
         width: 1.1em;
         height: 1.1em;
@@ -964,7 +967,7 @@
         }
       }
 
-      /* ===== Názov a dlhé texty ===== */
+      /* Text Truncation & Word Wraps */
       .top .ttl {
         white-space: nowrap;
         overflow: hidden;
@@ -981,7 +984,7 @@
       }
       @media (max-width: 600px) {
         .top .sp {
-          display: none; /* Pixel&Prompt bez medzier */
+          display: none;
         }
         .top .ttl {
           font-size: 1.02rem;
@@ -1411,7 +1414,7 @@
               );
             }).join("") +
             "</div></div>" +
-            '<div class="panel"><h3>Priemerný postup úloh</h3><div class="donut" style="background:conic-gradient(#16a34a ' +
+            '<div class="panel"><h3>Priemerný postup úhol</h3><div class="donut" style="background:conic-gradient(#16a34a ' +
             avg +
             '%,var(--ln) 0)"><div>' +
             avg +
