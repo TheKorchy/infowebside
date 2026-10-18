@@ -892,12 +892,83 @@
           display: none;
         }
       }
+
+      /* ===== Ikony: SVG namiesto emoji/znakov ===== */
+      .ico {
+        width: 1.1em;
+        height: 1.1em;
+        flex: none;
+        vertical-align: -0.18em;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4em;
+      }
+      .kb button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35em;
+      }
+      .kb button .ico {
+        width: 1em;
+        height: 1em;
+      }
+      .gl svg {
+        width: 40px;
+        height: 40px;
+        color: var(--bl);
+      }
+      #themeIcon {
+        display: grid;
+        place-items: center;
+      }
+      #themeIcon svg {
+        width: 20px;
+        height: 20px;
+        display: block;
+      }
+      html {
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+      }
+      a,
+      button,
+      select,
+      input,
+      textarea,
+      .kc {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+      input,
+      textarea {
+        -webkit-appearance: none;
+        appearance: none;
+      }
+      @media (hover: none) {
+        .theme-btn:hover {
+          transform: none;
+          background: rgba(255, 255, 255, 0.1);
+        }
+      }
+      @media (pointer: coarse) {
+        .theme-btn {
+          width: 44px;
+          height: 44px;
+        }
+        .seg button {
+          min-height: 40px;
+        }
+      }
     </style>
   </head>
   <body>
     <div id="gate">
       <form id="gf" class="gb">
-        <div class="gl">🔒</div>
+        <div class="gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
         <h1 id="gt">Prihlásenie</h1>
         <p id="gp">Zadajte heslo administrátora.</p>
         <input
@@ -944,7 +1015,7 @@
             id="themeToggle"
             aria-label="Prepnúť režim zobrazenia"
           >
-            <span id="themeIcon">🌙</span>
+            <span id="themeIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
           </button>
         </div>
         <div class="tr">
@@ -965,7 +1036,7 @@
             id="lock"
             style="color: #fff; border-color: rgba(255, 255, 255, 0.35)"
           >
-            🔒 Zamknúť
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Zamknúť
           </button>
         </div>
       </div>
@@ -1172,13 +1243,13 @@
             '%"></i></div>' +
             '<div class="kb"><button class="sm" data-a="prev" ' +
             (i === 0 ? "disabled" : "") +
-            ' aria-label="Späť">◀</button><button data-a="open">Detail</button>' +
+            ' aria-label="Späť"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 18l-6-6 6-6"/></svg></button><button data-a="open">Detail</button>' +
             (i < 3
-              ? '<button class="ok" data-a="done">✓ Hotovo</button>'
+              ? '<button class="ok" data-a="done"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg> Hotovo</button>'
               : "") +
             '<button class="sm" data-a="next" ' +
             (i === 3 ? "disabled" : "") +
-            ' aria-label="Ďalej">▶</button></div></div>'
+            ' aria-label="Ďalej"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 18l6-6-6-6"/></svg></button></div></div>'
           );
         }
         function bars(names, vals) {
@@ -1273,7 +1344,7 @@
                     '%"></i></div></td><td><button class="btn o" data-a="open">Detail</button> ' +
                     (o.st === "Hotová"
                       ? ""
-                      : '<button class="btn g" data-a="done">✓ Hotovo</button>') +
+                      : '<button class="btn g" data-a="done"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg> Hotovo</button>') +
                     "</td></tr>"
                   );
                 })
@@ -1404,10 +1475,10 @@
             "</textarea>" +
             '<div class="row">' +
             (all
-              ? '<button class="btn g" data-a="done">✓ Všetko hotové – presunúť do Hotové</button>'
+              ? '<button class="btn g" data-a="done"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg> Všetko hotové – presunúť do Hotové</button>'
               : o.st !== "Hotová"
-                ? '<button class="btn g" data-a="done">✓ Označiť ako hotové</button>'
-                : '<button class="btn o" data-a="reopen">↩ Vrátiť do vývoja</button>') +
+                ? '<button class="btn g" data-a="done"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg> Označiť ako hotové</button>'
+                : '<button class="btn o" data-a="reopen"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 7v6h6M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg> Vrátiť do vývoja</button>') +
             (o.email
               ? '<a class="btn" href="' + reply(o) + '">Odpovedať klientovi</a>'
               : "") +
@@ -1829,7 +1900,10 @@
           themeIcon.style.animation = "none";
           themeIcon.offsetHeight;
           themeIcon.style.animation = "rotateIn 0.3s ease forwards";
-          themeIcon.textContent = theme === "dark" ? "☀️" : "🌙";
+          themeIcon.innerHTML =
+            theme === "dark"
+              ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+              : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
         }
 
         var currentTheme = localStorage.getItem("theme");
