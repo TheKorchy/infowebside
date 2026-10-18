@@ -630,6 +630,268 @@
         display: inline-block;
         animation: rotateIn 0.3s ease forwards;
       }
+
+      /* ===== Responzívne úpravy: tablet a telefón ===== */
+      .w {
+        padding-left: max(20px, env(safe-area-inset-left, 0px));
+        padding-right: max(20px, env(safe-area-inset-right, 0px));
+      }
+      .dp {
+        max-height: 88vh;
+        max-height: 88dvh;
+      }
+
+      /* Tablet (do 1024px): tabuľa 2 × 2 bez bočného posúvania */
+      @media (max-width: 1024px) {
+        .board {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          overflow-x: visible;
+        }
+        .col {
+          min-height: 0;
+        }
+        .top .w {
+          row-gap: 10px;
+        }
+        .tr {
+          flex-wrap: wrap;
+        }
+      }
+
+      /* Tablet na výšku a menšie */
+      @media (max-width: 800px) {
+        .top .w {
+          justify-content: space-between;
+        }
+        .top .w > b {
+          order: 1;
+          flex: 1 1 auto;
+        }
+        .theme-switch-container {
+          order: 2;
+        }
+        .seg {
+          order: 3;
+          width: 100%;
+        }
+        .seg button {
+          flex: 1;
+          padding: 10px 8px;
+        }
+        .tr {
+          order: 4;
+          width: 100%;
+        }
+        .tr a {
+          padding: 8px 4px;
+        }
+        .tr .btn {
+          flex: 1 1 auto;
+          text-align: center;
+        }
+      }
+
+      /* Telefón */
+      @media (max-width: 600px) {
+        body {
+          font-size: 0.95rem;
+        }
+        .w {
+          padding-left: max(14px, env(safe-area-inset-left, 0px));
+          padding-right: max(14px, env(safe-area-inset-right, 0px));
+        }
+        .tr {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+        }
+        .tr a {
+          grid-column: 1 / -1;
+        }
+        .tr #new {
+          grid-column: 1 / -1;
+        }
+        .kpi {
+          gap: 10px;
+          margin: 16px 0;
+        }
+        .k {
+          padding: 12px 14px;
+        }
+        .k b {
+          font-size: 1.5rem;
+        }
+        /* Tabuľa: stĺpce sa posúvajú do strany a zapadajú */
+        .board {
+          grid-template-columns: none;
+          grid-auto-flow: column;
+          grid-auto-columns: min(86vw, 340px);
+          overflow-x: auto;
+          scroll-snap-type: x mandatory;
+          -webkit-overflow-scrolling: touch;
+          margin: 0 -14px;
+          padding: 0 14px 14px;
+          scroll-padding: 0 14px;
+        }
+        .col {
+          scroll-snap-align: start;
+        }
+        .kb button {
+          padding: 10px 4px;
+          font-size: 0.82rem;
+        }
+        .kb button.sm {
+          flex: 0 0 44px;
+        }
+        .panel {
+          padding: 14px;
+        }
+        /* Tabuľka objednávok sa na telefóne zmení na karty */
+        #v-table table,
+        #v-table tbody,
+        #v-table tr,
+        #v-table td {
+          display: block;
+        }
+        #v-table thead {
+          display: none;
+        }
+        #v-table tr {
+          border: 1px solid var(--ln);
+          border-radius: 12px;
+          padding: 8px 12px;
+          margin-bottom: 12px;
+          background: var(--bg);
+        }
+        #v-table td {
+          border: 0;
+          padding: 7px 0;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 12px;
+          min-width: 0 !important;
+        }
+        #v-table td:first-child {
+          display: block;
+          padding-bottom: 8px;
+          border-bottom: 1px solid var(--ln);
+          margin-bottom: 4px;
+        }
+        #v-table td:nth-child(2)::before {
+          content: "Balíček";
+        }
+        #v-table td:nth-child(3)::before {
+          content: "Termín";
+        }
+        #v-table td:nth-child(4)::before {
+          content: "Stav";
+        }
+        #v-table td:nth-child(5)::before {
+          content: "Postup";
+        }
+        #v-table td:nth-child(n + 2)::before {
+          font-size: 0.75rem;
+          font-weight: 700;
+          color: var(--mu);
+          flex: 0 0 64px;
+        }
+        #v-table td:nth-child(5) .bar {
+          flex: 1;
+        }
+        #v-table td:nth-child(4) select {
+          flex: 1;
+          min-width: 0;
+        }
+        #v-table td:last-child {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: stretch;
+          padding-top: 10px;
+        }
+        #v-table td:last-child .btn {
+          flex: 1 1 120px;
+          text-align: center;
+          padding: 11px 12px;
+        }
+        .hb {
+          grid-template-columns: 96px 1fr 24px;
+          gap: 8px;
+          font-size: 0.8rem;
+        }
+        .donut {
+          width: 150px;
+          height: 150px;
+        }
+        .donut div {
+          width: 92px;
+          height: 92px;
+          font-size: 1.4rem;
+        }
+        /* Dialógy: skoro na celú obrazovku */
+        dialog {
+          width: 100vw;
+          max-width: 100vw;
+          margin: auto auto 0;
+          border-radius: 18px 18px 0 0;
+        }
+        .dp {
+          padding: 18px 16px calc(18px + env(safe-area-inset-bottom, 0px));
+          max-height: 92vh;
+          max-height: 92dvh;
+        }
+        .dp .kt {
+          flex-wrap: wrap;
+        }
+        .dp .kt select {
+          width: 100%;
+        }
+        .dp .row .btn {
+          flex: 1 1 100%;
+          text-align: center;
+          padding: 13px 16px;
+        }
+        #raw {
+          min-height: 140px;
+        }
+        select,
+        textarea,
+        input[type="text"],
+        .gb input {
+          font-size: 16px; /* iOS nezoomuje do polí */
+        }
+        .gb {
+          padding: 26px 20px;
+        }
+      }
+
+      /* Dotykové zariadenia: väčšie ovládacie prvky */
+      @media (pointer: coarse) {
+        .kb button {
+          min-height: 40px;
+        }
+        .tk label {
+          padding: 12px 10px;
+        }
+        .tk input {
+          width: 20px;
+          height: 20px;
+          flex: none;
+        }
+        .btn {
+          min-height: 40px;
+        }
+      }
+
+      /* Telefón na šírku */
+      @media (max-height: 480px) and (orientation: landscape) {
+        .gb {
+          padding: 18px 20px;
+          gap: 8px;
+        }
+        .gl {
+          display: none;
+        }
+      }
     </style>
   </head>
   <body>
